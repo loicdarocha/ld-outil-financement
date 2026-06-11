@@ -27,7 +27,8 @@
   --radius:10px;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Outfit',sans-serif;background:var(--off);color:var(--dark);min-height:100vh;}
+html{overflow-x:hidden;}
+body{font-family:'Outfit',sans-serif;background:var(--off);color:var(--dark);min-height:100vh;overflow-x:hidden;max-width:100vw;}
 .header{background:var(--dark);border-bottom:1px solid rgba(255,255,255,0.08);box-shadow:0 2px 16px var(--shadow);padding:0 32px;display:flex;align-items:center;justify-content:space-between;height:62px;position:sticky;top:0;z-index:200;}
 .logo-area{display:flex;align-items:center;gap:14px;}
 .brand-name{font-weight:700;font-size:14px;color:#fff;letter-spacing:4px;text-transform:uppercase;}
@@ -42,6 +43,7 @@ body{font-family:'Outfit',sans-serif;background:var(--off);color:var(--dark);min
 .ntab.attest:hover{color:rgba(201,168,76,0.8);}
 .ntab.attest.active{color:var(--gold-light);border-bottom-color:var(--gold);}
 .ntab.attest.active .nnum{background:var(--gold);color:var(--navy);}
+.ntab-label-short{display:none;}
 .page{display:none;}
 .page.active{display:block;}
 /* ---- SIMULATEUR ---- */
@@ -251,7 +253,43 @@ footer{background:var(--white);border-top:1px solid var(--border);padding:16px 4
 footer p{font-size:10px;font-weight:300;letter-spacing:2px;text-transform:uppercase;color:var(--sand);}
 footer span{color:var(--terra);font-weight:500;}
 ::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:var(--sand);border-radius:3px;}
-@media(max-width:900px){.sim-main{grid-template-columns:1fr;}.gen-layout{grid-template-columns:1fr;}.results-grid,.sim-results{grid-template-columns:1fr 1fr;}.results-card,.sim-card{grid-column:1;}.a-form-grid{grid-template-columns:1fr;}.a-form-group.full{grid-column:1;}#doc-preview{padding:16px 14px;}.doc-header{flex-direction:column;gap:8px;}.a-action-row{flex-direction:column;}.a-action-row .btn-a{width:100%;justify-content:center;}}
+@media(max-width:900px){
+  .sim-main{grid-template-columns:1fr;padding:20px 14px 50px;}
+  .gen-layout{grid-template-columns:1fr;}
+  .results-grid,.sim-results{grid-template-columns:1fr 1fr;}
+  .results-card,.sim-card{grid-column:1;}
+  .a-form-grid{grid-template-columns:1fr;}
+  .a-form-group.full{grid-column:1;}
+  #doc-preview{padding:16px 14px;}
+  .doc-header{flex-direction:column;gap:8px;}
+  .a-action-row{flex-direction:column;}
+  .a-action-row .btn-a{width:100%;justify-content:center;}
+  /* Header + nav compacts */
+  .header{padding:0 16px;height:54px;}
+  .brand-name{font-size:12px;letter-spacing:2px;}
+  .brand-sub{font-size:7px;letter-spacing:2px;}
+  /* Nav : les 3 onglets se partagent la largeur, libellés courts */
+  .nav{padding:0;width:100%;}
+  .nav::-webkit-scrollbar{display:none;}
+  .ntab{flex:1 1 0;min-width:0;justify-content:center;padding:0 6px;height:48px;font-size:10px;letter-spacing:0.5px;gap:6px;text-align:center;}
+  .ntab .nnum{width:18px;height:18px;font-size:9px;}
+  .ntab-label{display:none;}
+  .ntab-label-short{display:inline;}
+  /* Générateur de dossier : panneau formulaire pleine largeur */
+  .form-panel{border-right:none;border-bottom:1px solid var(--border);}
+  .output-panel{padding:16px;}
+  .btn-gen{width:calc(100% - 36px);}
+  .sim-hero{padding:22px 18px 24px;}
+  .sim-hero h1{font-size:19px;}
+}
+@media(max-width:480px){
+  .results-grid,.sim-results{grid-template-columns:1fr;}
+  .s-card{padding:18px;}
+  .field-row{grid-template-columns:1fr;}
+  .ntab{padding:0 4px;font-size:9px;letter-spacing:0;gap:4px;}
+  .ntab .nnum{width:16px;height:16px;font-size:8px;}
+  #doc-preview{font-size:11px;}
+}
 </style>
 </head>
 <body>
@@ -274,9 +312,9 @@ footer span{color:var(--terra);font-weight:500;}
 
 <!-- NAV -->
 <div class="nav">
-  <div class="ntab active" onclick="switchPage('sim',this)"><span class="nnum">1</span> Simulateur de faisabilité</div>
-  <div class="ntab" onclick="switchPage('gen',this)"><span class="nnum">2</span> Générateur de dossier</div>
-  <div class="ntab attest" onclick="switchPage('attest',this)"><span class="nnum">3</span> Attestation de faisabilité</div>
+  <div class="ntab active" onclick="switchPage('sim',this)"><span class="nnum">1</span> <span class="ntab-label">Simulateur de faisabilité</span><span class="ntab-label-short">Simulateur</span></div>
+  <div class="ntab" onclick="switchPage('gen',this)"><span class="nnum">2</span> <span class="ntab-label">Générateur de dossier</span><span class="ntab-label-short">Dossier</span></div>
+  <div class="ntab attest" onclick="switchPage('attest',this)"><span class="nnum">3</span> <span class="ntab-label">Attestation de faisabilité</span><span class="ntab-label-short">Attestation</span></div>
 </div>
 
 <div class="page active" id="page-sim">
