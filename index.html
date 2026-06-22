@@ -1028,8 +1028,10 @@ footer span{color:var(--terra);font-weight:500;}
         <div class="a-form-group"><label class="a-label">Ville</label><input type="text" class="a-input" id="m_ville" placeholder="Clermont-Ferrand" oninput="mrhPreview()"></div>
         <div class="a-form-group"><label class="a-label">Surface habitable</label><div class="a-input-prefix"><span class="prefix">m²</span><input type="number" class="a-input" id="m_surface" placeholder="78" oninput="mrhPreview()"></div></div>
         <div class="a-form-group"><label class="a-label">Nombre de pièces principales</label><input type="number" class="a-input" id="m_pieces" placeholder="3" oninput="mrhPreview()"></div>
+        <div class="a-form-group"><label class="a-label">Pièces de plus de 40 m²</label><input type="number" class="a-input" id="m_pieces40" placeholder="0" oninput="mrhPreview()"></div>
         <div class="a-form-group"><label class="a-label">Étage (si appartement)</label><input type="text" class="a-input" id="m_etage" placeholder="2e / RDC…" oninput="mrhPreview()"></div>
         <div class="a-form-group"><label class="a-label">Année de construction</label><input type="number" class="a-input" id="m_annee" placeholder="1995" oninput="mrhPreview()"></div>
+        <div class="a-form-group full"><label class="a-label">Description du bien</label><input type="text" class="a-input" id="m_description" placeholder="Ex : T3 avec balcon, séjour de 42 m²…" oninput="mrhPreview()"></div>
       </div>
     </div>
 
@@ -1046,15 +1048,20 @@ footer span{color:var(--terra);font-weight:500;}
         <div class="a-form-group"><label class="a-label">Garage / parking</label>
           <select class="a-select" id="m_garage" onchange="mrhPreview()"><option value="Non">Non</option><option value="Garage privatif">Garage privatif</option><option value="Place de parking">Place de parking</option></select></div>
         <div class="a-form-group full"><label class="a-label">Dépendances / annexes</label><input type="text" class="a-input" id="m_dependances" placeholder="Cave, grenier, véranda, abri de jardin, terrasse…" oninput="mrhPreview()"></div>
+        <div class="a-form-group"><label class="a-label">Surface des dépendances</label><div class="a-input-prefix"><span class="prefix">m²</span><input type="number" class="a-input" id="m_depSurface" placeholder="15" oninput="mrhPreview()"></div></div>
+        <div class="a-form-group"><label class="a-label">Bien en construction / rénovation ?</label>
+          <select class="a-select" id="m_chantier" onchange="mrhPreview()"><option value="Non">Non</option><option value="En cours de construction">En cours de construction</option><option value="En cours de rénovation">En cours de rénovation</option></select></div>
       </div>
       <div style="margin-top:14px;">
         <label class="a-label" style="display:block;margin-bottom:8px;">Caractéristiques particulières</label>
         <div class="toggle-group-a">
           <label class="toggle-label-a"><input type="checkbox" id="m_piscine" onchange="mrhPreview()"> Piscine</label>
+          <label class="toggle-label-a"><input type="checkbox" id="m_spa" onchange="mrhPreview()"> Spa / jacuzzi</label>
           <label class="toggle-label-a"><input type="checkbox" id="m_veranda" onchange="mrhPreview()"> Véranda</label>
           <label class="toggle-label-a"><input type="checkbox" id="m_panneaux" onchange="mrhPreview()"> Panneaux solaires</label>
           <label class="toggle-label-a"><input type="checkbox" id="m_jardin" onchange="mrhPreview()"> Jardin</label>
         </div>
+        <p style="font-size:11px;color:var(--muted);margin-top:8px;">À noter : en cours de construction/rénovation, l'assurance couvre généralement 50 % le temps des travaux (max 1 an).</p>
       </div>
     </div>
 
@@ -1085,10 +1092,15 @@ footer span{color:var(--terra);font-weight:500;}
       <div class="a-form-grid">
         <div class="a-form-group"><label class="a-label">Qualité de l'assuré</label>
           <select class="a-select" id="m_qualite" onchange="mrhPreview()"><option value="Propriétaire occupant">Propriétaire occupant</option><option value="Propriétaire non occupant (bailleur)">Propriétaire non occupant (bailleur)</option><option value="Locataire">Locataire</option></select></div>
+        <div class="a-form-group"><label class="a-label">Statut professionnel</label><input type="text" class="a-input" id="m_statutpro" placeholder="Salarié, TNS, retraité…" oninput="mrhPreview()"></div>
         <div class="a-form-group"><label class="a-label">Nombre d'occupants</label><input type="number" class="a-input" id="m_occupants" placeholder="2" oninput="mrhPreview()"></div>
+        <div class="a-form-group"><label class="a-label">Nombre d'enfants</label><input type="number" class="a-input" id="m_enfants" placeholder="0" oninput="mrhPreview()"></div>
         <div class="a-form-group"><label class="a-label">Valeur du mobilier à assurer</label><div class="a-input-prefix"><span class="prefix">€</span><input type="number" class="a-input" id="m_mobilier" placeholder="25 000" oninput="mrhPreview()"></div></div>
         <div class="a-form-group"><label class="a-label">Objets de valeur (bijoux, art…)</label><div class="a-input-prefix"><span class="prefix">€</span><input type="number" class="a-input" id="m_valeurs" placeholder="5 000" oninput="mrhPreview()"></div></div>
-        <div class="a-form-group full"><label class="a-label">Sinistres déclarés sur les 36 derniers mois</label><textarea class="a-textarea" id="m_sinistres" placeholder="Aucun / Préciser nature et date…" oninput="mrhPreview()"></textarea></div>
+        <div class="a-form-group"><label class="a-label">Nombre de sinistres (3 dernières années)</label><input type="number" class="a-input" id="m_nbsinistres" placeholder="0" oninput="mrhPreview()"></div>
+        <div class="a-form-group"><label class="a-label">Mode d'indemnisation souhaité</label>
+          <select class="a-select" id="m_indemnisation" onchange="mrhPreview()"><option value="">—</option><option value="Avec vétusté">Avec vétusté</option><option value="Avec vétusté réduite">Avec vétusté réduite</option><option value="Rééquipement à neuf">Rééquipement à neuf</option></select></div>
+        <div class="a-form-group full"><label class="a-label">Détail des sinistres (si applicable)</label><textarea class="a-textarea" id="m_sinistres" placeholder="Aucun / Préciser nature et date…" oninput="mrhPreview()"></textarea></div>
         <div class="a-form-group full"><label class="a-label">Informations complémentaires</label><textarea class="a-textarea" id="m_notes" placeholder="Tout élément utile pour l'établissement du devis…" oninput="mrhPreview()"></textarea></div>
       </div>
     </div>
@@ -2372,26 +2384,34 @@ function mrhRows(){
   add('Usage', mrhVal('m_usage'));
   const adr=[mrhVal('m_adresse'), [mrhVal('m_cp'),mrhVal('m_ville')].filter(Boolean).join(' ')].filter(Boolean).join(', ');
   add('Adresse', adr);
+  add('Description du bien', mrhVal('m_description'));
   add('Surface habitable', mrhVal('m_surface')?mrhVal('m_surface')+' m²':'');
   add('Pièces principales', mrhVal('m_pieces'));
+  add('Pièces de plus de 40 m²', mrhVal('m_pieces40') && parseInt(mrhVal('m_pieces40'))>0 ? mrhVal('m_pieces40') : '');
   add('Étage', mrhVal('m_etage'));
   add('Année de construction', mrhVal('m_annee'));
   add('Nature des murs', mrhVal('m_murs'));
   add('Nature de la toiture', mrhVal('m_toiture'));
   add('Mitoyenneté', mrhVal('m_mitoyen'));
   add('Garage / parking', mrhVal('m_garage')!=='Non'?mrhVal('m_garage'):'');
-  add('Dépendances / annexes', mrhVal('m_dependances'));
-  const parts=[]; if(mrhChk('m_piscine'))parts.push('Piscine'); if(mrhChk('m_veranda'))parts.push('Véranda'); if(mrhChk('m_panneaux'))parts.push('Panneaux solaires'); if(mrhChk('m_jardin'))parts.push('Jardin');
+  const depTxt = [mrhVal('m_dependances'), mrhVal('m_depSurface')?('('+mrhVal('m_depSurface')+' m²)'):''].filter(Boolean).join(' ');
+  add('Dépendances / annexes', depTxt);
+  const parts=[]; if(mrhChk('m_piscine'))parts.push('Piscine'); if(mrhChk('m_spa'))parts.push('Spa / jacuzzi'); if(mrhChk('m_veranda'))parts.push('Véranda'); if(mrhChk('m_panneaux'))parts.push('Panneaux solaires'); if(mrhChk('m_jardin'))parts.push('Jardin');
   add('Caractéristiques particulières', parts.join(', '));
+  add('Bien en construction / rénovation', mrhVal('m_chantier')!=='Non'?mrhVal('m_chantier')+' (couverture 50 % le temps des travaux, max 1 an)':'');
   add('Mode de chauffage', mrhVal('m_chauffage'));
   add('Cheminée / poêle', mrhVal('m_cheminee')!=='Non'?mrhVal('m_cheminee'):'');
   const secu=[]; if(mrhChk('m_alarme'))secu.push('Alarme'); if(mrhChk('m_fumee'))secu.push('Détecteur de fumée'); if(mrhChk('m_porte'))secu.push('Porte blindée'); if(mrhChk('m_volets'))secu.push('Volets/sécurité ouvertures'); if(mrhChk('m_tele'))secu.push('Télésurveillance');
   add('Dispositifs de sécurité', secu.length?secu.join(', '):'Aucun déclaré');
   add('Qualité de l\'assuré', mrhVal('m_qualite'));
+  add('Statut professionnel', mrhVal('m_statutpro'));
   add('Nombre d\'occupants', mrhVal('m_occupants'));
+  add('Nombre d\'enfants', mrhVal('m_enfants'));
   add('Valeur du mobilier à assurer', mrhEur(mrhVal('m_mobilier')));
   add('Objets de valeur', mrhEur(mrhVal('m_valeurs')));
-  add('Sinistres (36 mois)', mrhVal('m_sinistres'));
+  add('Mode d\'indemnisation souhaité', mrhVal('m_indemnisation'));
+  add('Sinistres (3 dernières années)', mrhVal('m_nbsinistres')!==''?mrhVal('m_nbsinistres'):'');
+  add('Détail des sinistres', mrhVal('m_sinistres'));
   add('Informations complémentaires', mrhVal('m_notes'));
   return rows;
 }
