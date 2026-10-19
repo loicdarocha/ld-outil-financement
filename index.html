@@ -717,6 +717,32 @@ footer span{color:inherit;}
   .sim-box{padding:12px;}
   .sim-value{font-size:18px;}
 }
+
+/* ── PTZ ── */
+.ptz-check-btn{display:inline-block;margin:8px 0 0 26px;padding:0;border:none;background:none;color:var(--accent);font-size:14px;font-weight:500;cursor:pointer;text-align:left;}
+.ptz-check-btn:hover{text-decoration:underline;}
+.ptz-modal{max-width:880px!important;max-height:92vh;display:flex;flex-direction:column;padding:0!important;overflow:hidden;}
+.ptz-head{display:flex;align-items:center;justify-content:space-between;padding:20px 24px 12px;}
+.ptz-head h3{margin:0!important;}
+.ptz-x{width:30px;height:30px;border-radius:50%;border:none;background:var(--fill-2);color:var(--label-2);font-size:13px;cursor:pointer;}
+.ptz-body{display:grid;grid-template-columns:1fr 1fr;gap:24px;padding:4px 24px 24px;overflow-y:auto;}
+.ptz-form .field input[type=text],.ptz-form select{width:100%;padding:0 12px;}
+.ptz-check{display:flex;gap:10px;align-items:center;font-size:14px;color:var(--label);margin-bottom:4px;cursor:pointer;}
+.ptz-check input{width:20px;height:20px;}
+.ptz-result{background:var(--fill);border-radius:14px;padding:20px;align-self:start;position:sticky;top:0;}
+.ptz-verdict{display:flex;align-items:center;gap:10px;font-size:17px;font-weight:600;margin-bottom:6px;}
+.ptz-verdict .dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.ptz-verdict.ok .dot{background:var(--ok);}.ptz-verdict.no .dot{background:var(--bad);}.ptz-verdict.wait .dot{background:var(--label-3);}
+.ptz-reason{font-size:14px;color:var(--label-2);line-height:1.5;margin-bottom:4px;}
+.ptz-amount{font-size:40px;font-weight:700;letter-spacing:-0.03em;color:var(--accent);margin:12px 0 2px;font-variant-numeric:tabular-nums;}
+.ptz-rows{margin:14px 0 4px;border-top:1px solid var(--sep);}
+.ptz-rows div{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid var(--sep);font-size:14px;}
+.ptz-rows span:first-child{color:var(--label-2);}
+.ptz-rows span:last-child{font-weight:500;text-align:right;font-variant-numeric:tabular-nums;}
+.ptz-apply{width:100%;margin-top:16px;height:44px;border:none;border-radius:980px;background:var(--accent);color:#fff;font-size:15px;font-weight:500;cursor:pointer;}
+.ptz-apply:hover{background:#1A54C2;}
+.ptz-note{font-size:12px;color:var(--label-3);margin-top:12px;line-height:1.45;}
+@media(max-width:700px){.ptz-body{grid-template-columns:1fr;}.ptz-result{position:static;}.ptz-modal{max-height:94vh;}}
 </style>
 </head>
 <body>
@@ -857,6 +883,7 @@ footer span{color:inherit;}
           <input type="checkbox" id="ptzActif" onchange="togglePtz()" style="width:16px;height:16px;accent-color:var(--terra);cursor:pointer;">
           Prêt à Taux Zéro (PTZ)
         </label>
+        <button type="button" class="ptz-check-btn" onclick="openPtz()">Vérifier l'éligibilité et calculer le montant</button>
       </div>
       <div id="ptz-section" style="display:none;background:var(--off);border-radius:10px;padding:14px;border:1px solid var(--border);margin-bottom:10px;">
         <div class="field-row">
@@ -1478,6 +1505,62 @@ footer span{color:inherit;}
     </div>
   </div>
 </div>
+<div class="modal-overlay" id="ptz-modal" onclick="if(event.target===this)closePtz()">
+  <div class="modal ptz-modal" role="dialog" aria-labelledby="ptzTitle">
+    <div class="ptz-head"><h3 id="ptzTitle">Éligibilité au PTZ</h3><button class="ptz-x" onclick="closePtz()" aria-label="Fermer">✕</button></div>
+    <div class="ptz-body">
+      <div class="ptz-form">
+        <div class="field">
+          <label for="ptzCommune">Commune du bien</label>
+          <input type="text" id="ptzCommune" list="ptzCommuneList" placeholder="Nom ou code postal" autocomplete="off" oninput="ptzCommuneInput()" onchange="ptzCommunePick()">
+          <datalist id="ptzCommuneList"></datalist>
+        </div>
+        <div class="field">
+          <label for="ptzZone">Zone</label>
+          <select id="ptzZone" onchange="ptzZoneManual=true;document.getElementById('ptzZoneHint').textContent='Zone choisie à la main.';ptzEval()">
+            <option value="">Choisir une commune</option><option value="Abis">A bis</option><option value="A">A</option><option value="B1">B1</option><option value="B2">B2</option><option value="C">C</option>
+          </select>
+          <span class="field-hint" id="ptzZoneHint"></span>
+        </div>
+        <div class="field">
+          <label for="ptzType">Type de projet</label>
+          <select id="ptzType" onchange="ptzEval()">
+            <option value="neuf_coll">Appartement neuf (ou VEFA)</option>
+            <option value="neuf_mi">Maison individuelle neuve (achat ou construction)</option>
+            <option value="ancien_trav">Logement ancien avec travaux</option>
+            <option value="hlm">Logement social acheté par son occupant</option>
+            <option value="psla">Location-accession (PSLA) ou bail réel solidaire</option>
+          </select>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="ptzOcc">Personnes dans le foyer</label>
+            <div class="input-wrap"><input type="number" id="ptzOcc" min="1" max="12" value="2" oninput="ptzEval()"><span class="unit">pers.</span></div>
+          </div>
+          <div class="field">
+            <label for="ptzRfr">Revenu fiscal de référence</label>
+            <div class="input-wrap"><input type="number" id="ptzRfr" placeholder="0" oninput="ptzEval()"><span class="unit">€</span></div>
+          </div>
+        </div>
+        <span class="field-hint" style="margin-top:-8px;margin-bottom:12px;" id="ptzRfrHint"></span>
+        <div class="field-row">
+          <div class="field">
+            <label for="ptzPrix">Prix ou terrain + construction</label>
+            <div class="input-wrap"><input type="number" id="ptzPrix" placeholder="0" oninput="ptzEval()"><span class="unit">€</span></div>
+          </div>
+          <div class="field">
+            <label for="ptzTrav">Travaux</label>
+            <div class="input-wrap"><input type="number" id="ptzTrav" placeholder="0" oninput="ptzEval()"><span class="unit">€</span></div>
+          </div>
+        </div>
+        <span class="field-hint" style="margin-top:-8px;margin-bottom:12px;">Frais d'agence compris, hors frais de notaire et de garantie.</span>
+        <label class="ptz-check"><input type="checkbox" id="ptzPrimo" checked onchange="ptzEval()"> Pas propriétaire de sa résidence principale depuis 2 ans</label>
+        <span class="field-hint">Exceptions : carte d'invalidité, AAH ou AEEH, ou logement détruit par une catastrophe.</span>
+      </div>
+      <div class="ptz-result" id="ptzResult"></div>
+    </div>
+  </div>
+</div>
 <div class="modal-overlay" id="sims-modal" onclick="if(event.target===this)closeSims()">
   <div class="modal sims-modal">
     <h3>Simulations enregistrées</h3>
@@ -1908,6 +1991,136 @@ async function cloudInit(){
   renderCloud();if(sbUser)cloudSync();
 }
 document.addEventListener('DOMContentLoaded',cloudInit);
+
+/* ════════════════════════════════════
+   ÉLIGIBILITÉ PTZ — barèmes en vigueur (décret 2024-304 modifié 2025, PTZ prolongé jusqu'au 31/12/2027)
+   Zonage ABC : arrêté en vigueur depuis le 26 juin 2026 (data.gouv.fr)
+════════════════════════════════════ */
+const PTZ_RULES_DATE='barèmes 2026';
+const PTZ_COEF=[0,1,1.5,1.8,2.1,2.4,2.7,3.0,3.3];
+const PTZ_TRANCHES={A:[25000,31000,37000,49000],B1:[21500,26000,30000,34500],B2:[18000,22500,27000,31500],C:[15000,19500,24000,28500]};
+const PTZ_PLAF_OP={A:[150000,225000,270000,315000,360000],B1:[135000,202500,243000,283500,324000],B2:[110000,165000,198000,231000,264000],C:[100000,150000,180000,210000,240000]};
+const PTZ_QUOTITE={std:[0.5,0.4,0.4,0.2],mi:[0.3,0.2,0.2,0.1]};
+const PTZ_DUREE=[{diff:10,tot:25},{diff:8,tot:20},{diff:2,tot:15},{diff:0,tot:10}];
+const ZONAGE_URL='https://www.data.gouv.fr/api/1/datasets/r/13f7282b-8a25-43ab-9713-8bb4e476df55';
+// Secours hors connexion : communes du Puy-de-Dôme hors zone C (les autres communes du 63 sont en C)
+const ZONAGE_63={"63014":"B1","63019":"B2","63032":"B1","63042":"B2","63063":"B1","63069":"B2","63070":"B1","63075":"B1","63099":"B2","63103":"B2","63113":"B1","63124":"B1","63141":"B2","63150":"B2","63164":"B2","63193":"B2","63212":"B2","63224":"B2","63245":"B2","63254":"B2","63272":"B2","63284":"B2","63300":"B2","63307":"B1","63308":"B1"};
+let ptzZonage=null,ptzZonageLoading=null,ptzZoneManual=false,ptzCommunes=[],ptzCode=null,ptzLast=null,ptzTimer=null;
+const eur=n=>Math.round(n).toLocaleString('fr-FR')+' €';
+
+function ptzLoadZonage(){
+  if(ptzZonage)return Promise.resolve(ptzZonage);
+  if(ptzZonageLoading)return ptzZonageLoading;
+  try{const c=JSON.parse(localStorage.getItem('ld_zonage_v20260626')||'null');if(c){ptzZonage=c;return Promise.resolve(c);}}catch(e){}
+  ptzZonageLoading=fetch(ZONAGE_URL).then(r=>{if(!r.ok)throw 0;return r.text();}).then(t=>{
+    const m={};t.split(/\r?\n/).slice(1).forEach(l=>{const p=l.split(';');if(p.length>=4&&p[3].trim()!=='C')m[p[0]]=p[3].trim();});
+    ptzZonage=m;try{localStorage.setItem('ld_zonage_v20260626',JSON.stringify(m));}catch(e){}return m;
+  }).catch(()=>{ptzZonageLoading=null;return null;});
+  return ptzZonageLoading;
+}
+async function ptzZoneFor(code){
+  const m=await ptzLoadZonage();
+  if(m)return {zone:m[code]||'C',src:'officiel'};
+  if(code&&code.startsWith('63'))return {zone:ZONAGE_63[code]||'C',src:'officiel'};
+  return {zone:'',src:'indispo'};
+}
+function ptzCommuneInput(){
+  clearTimeout(ptzTimer);
+  const q=document.getElementById('ptzCommune').value.trim();
+  if(q.length<2)return;
+  ptzTimer=setTimeout(async()=>{
+    const isCP=/^\d{5}$/.test(q);
+    const url=isCP?`https://geo.api.gouv.fr/communes?codePostal=${q}&fields=nom,code,codesPostaux&limit=15`
+                  :`https://geo.api.gouv.fr/communes?nom=${encodeURIComponent(q)}&fields=nom,code,codesPostaux&boost=population&limit=10`;
+    try{
+      const res=await fetch(url);ptzCommunes=await res.json();
+      document.getElementById('ptzCommuneList').innerHTML=ptzCommunes.map(c=>`<option value="${escHtml(c.nom)} (${(c.codesPostaux||[])[0]||c.code.slice(0,2)})"></option>`).join('');
+      if(ptzCommunes.length===1&&isCP){document.getElementById('ptzCommune').value=`${ptzCommunes[0].nom} (${q})`;ptzCommunePick();}
+    }catch(e){document.getElementById('ptzZoneHint').textContent="Recherche de commune indisponible : choisis la zone à la main.";}
+  },250);
+}
+async function ptzCommunePick(){
+  const v=document.getElementById('ptzCommune').value;
+  const c=ptzCommunes.find(x=>v.startsWith(x.nom+' ('))||ptzCommunes.find(x=>x.nom.toLowerCase()===v.trim().toLowerCase());
+  if(!c)return;
+  ptzCode=c.code;ptzZoneManual=false;
+  const hint=document.getElementById('ptzZoneHint');hint.textContent='Recherche de la zone…';
+  const r=await ptzZoneFor(c.code);
+  if(r.zone){document.getElementById('ptzZone').value=r.zone;hint.textContent=`${c.nom} est en zone ${r.zone==='Abis'?'A bis':r.zone} (zonage officiel en vigueur depuis le 26 juin 2026).`;}
+  else hint.textContent="Zonage officiel inaccessible : choisis la zone à la main.";
+  ptzEval();
+}
+function ptzEval(){
+  const box=document.getElementById('ptzResult');
+  const zSel=document.getElementById('ptzZone').value;
+  const z=zSel==='Abis'?'A':zSel;
+  const type=document.getElementById('ptzType').value;
+  const occ=Math.max(1,Math.min(8,parseInt(document.getElementById('ptzOcc').value)||1));
+  const rfr=parseFloat(document.getElementById('ptzRfr').value)||0;
+  const prix=parseFloat(document.getElementById('ptzPrix').value)||0;
+  const trav=parseFloat(document.getElementById('ptzTrav').value)||0;
+  const primo=document.getElementById('ptzPrimo').checked;
+  const cout=prix+trav;
+  ptzLast=null;
+  document.getElementById('ptzRfrHint').textContent='Revenu fiscal de référence de l\'année N-2, de tous les occupants.';
+  const wait=(t,r)=>{box.innerHTML=`<div class="ptz-verdict wait"><span class="dot"></span>${t}</div><div class="ptz-reason">${r}</div>`;};
+  const no=(t,r)=>{box.innerHTML=`<div class="ptz-verdict no"><span class="dot"></span>${t}</div><div class="ptz-reason">${r}</div>`;};
+  if(!z)return wait('Indique la commune du bien','La zone détermine les plafonds de revenus et le montant du PTZ.');
+  if(!primo)return no('Non éligible','L\'emprunteur doit ne pas avoir été propriétaire de sa résidence principale au cours des 2 dernières années, sauf exception.');
+  if(type==='ancien_trav'&&!(z==='B2'||z==='C'))return no('Non éligible dans cette zone',`Dans l'ancien, le PTZ n'est ouvert qu'en zones B2 et C. Ce bien est en zone ${zSel==='Abis'?'A bis':zSel}.`);
+  if(!cout||!rfr)return wait('Complète les montants','Renseigne le revenu fiscal de référence et le coût du projet pour vérifier l\'éligibilité.');
+  if(type==='ancien_trav'&&trav<cout*0.25){
+    const mini=Math.ceil(prix/3);
+    return no('Travaux insuffisants',`Les travaux doivent représenter au moins 25 % du coût total de l'opération, soit au moins ${eur(mini)} de travaux pour un prix de ${eur(prix)}. Ici : ${eur(trav)}.`);
+  }
+  const revRetenu=Math.max(rfr,cout/9);
+  const coef=PTZ_COEF[occ];
+  const quotient=revRetenu/coef;
+  const tr=PTZ_TRANCHES[z];
+  const plafondRev=tr[3]*coef;
+  if(quotient>tr[3])return no('Revenus trop élevés',`Revenu retenu ${eur(revRetenu)}${revRetenu>rfr?' (coût du projet ÷ 9, supérieur au RFR)':''}, pour un plafond de ${eur(plafondRev)} pour ${occ} personne${occ>1?'s':''} en zone ${zSel==='Abis'?'A bis':zSel}.`);
+  const t=tr.findIndex(x=>quotient<=x);
+  const q=(type==='neuf_mi'?PTZ_QUOTITE.mi:PTZ_QUOTITE.std)[t];
+  const plafOp=PTZ_PLAF_OP[z][Math.min(occ,5)-1];
+  const base=Math.min(cout,plafOp);
+  const montant=Math.floor(base*q);
+  const d=PTZ_DUREE[t];
+  const mensDiff=d.diff>0?0:montant/(d.tot*12);
+  const mensApres=montant/((d.tot-d.diff)*12);
+  ptzLast={montant,diff:d.diff,tot:d.tot};
+  box.innerHTML=`<div class="ptz-verdict ok"><span class="dot"></span>Éligible, tranche ${t+1}</div>
+    <div class="ptz-reason">Revenu retenu ${eur(revRetenu)} pour un plafond de ${eur(plafondRev)}.</div>
+    <div class="ptz-amount">${eur(montant)}</div>
+    <div class="ptz-reason">${Math.round(q*100)} % de ${eur(base)}${cout>plafOp?` (coût plafonné à ${eur(plafOp)})`:''}</div>
+    <div class="ptz-rows">
+      <div><span>Durée totale</span><span>${d.tot} ans</span></div>
+      <div><span>Différé</span><span>${d.diff?d.diff+' ans sans mensualité':'aucun'}</span></div>
+      <div><span>Mensualité ${d.diff?'après le différé':''}</span><span>${eur(mensApres)}/mois</span></div>
+      <div><span>Zone · foyer</span><span>${zSel==='Abis'?'A bis':zSel} · ${occ} pers. (coef. ${String(coef).replace('.',',')})</span></div>
+    </div>
+    <button class="ptz-apply" onclick="ptzApply()">Ajouter ce PTZ à la simulation</button>
+    <div class="ptz-note">Le PTZ ne peut pas dépasser le montant des autres prêts de plus de 2 ans. Résultat indicatif, à confirmer par la banque.</div>`;
+}
+function ptzApply(){
+  if(!ptzLast)return;
+  document.getElementById('ptzActif').checked=true;
+  document.getElementById('ptz-section').style.display='block';
+  document.getElementById('ptzMontant').value=ptzLast.montant;
+  document.getElementById('ptzDuree').value=ptzLast.tot;
+  document.getElementById('ptzDiffere').value=ptzLast.diff;
+  calc();closePtz();
+  simStatus(`PTZ de ${eur(ptzLast.montant)} ajouté à la simulation.`);
+}
+function openPtz(){
+  const prix=getVal('prixBien'),trav=getVal('travaux');
+  if(!document.getElementById('ptzPrix').value&&prix)document.getElementById('ptzPrix').value=prix;
+  if(!document.getElementById('ptzTrav').value&&trav)document.getElementById('ptzTrav').value=trav;
+  document.getElementById('ptz-modal').classList.add('open');
+  ptzLoadZonage();ptzEval();
+  setTimeout(()=>{const c=document.getElementById('ptzCommune');if(!c.value)c.focus();},60);
+}
+function closePtz(){document.getElementById('ptz-modal').classList.remove('open');}
+
 
 
 function resetForm() {
