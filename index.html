@@ -439,7 +439,7 @@ footer span{color:var(--terra);font-weight:500;}
 /* charte d'origine conservée dans les documents générés */
 #doc-preview,#mrh-preview,#cmp-doc-preview{--navy:#1B2B4B;--navy-light:#243660;--gold:#C9A84C;--gold-light:#E2C47A;--cream:#F8F6F0;--cream-dark:#EDE9DE;--muted:#6B7A99;font-family:var(--font);}
 
-*:not(#doc-preview *):not(#mrh-preview *):not(#cmp-doc-preview *){font-family:var(--font)!important;}
+*:not(#doc-preview *):not(#mrh-preview *):not(#cmp-doc-preview *):not(.rc *){font-family:var(--font)!important;}
 body{background:var(--bg);color:var(--label);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;font-size:15px;letter-spacing:-0.01em;}
 input,select,textarea,button{font-variant-numeric:tabular-nums;}
 ::selection{background:var(--accent-ring);}
@@ -743,6 +743,91 @@ footer span{color:inherit;}
 .ptz-apply:hover{background:#1A54C2;}
 .ptz-note{font-size:12px;color:var(--label-3);margin-top:12px;line-height:1.45;}
 @media(max-width:700px){.ptz-body{grid-template-columns:1fr;}.ptz-result{position:static;}.ptz-modal{max-height:94vh;}}
+
+/* ── Barre client ── */
+.sv-break{flex-basis:100%;height:0;}
+.save-bar input#simClient,.save-bar input#simCo,.save-bar input#simEmail{flex:1 1 200px;max-width:300px;}
+/* ── Coût du crédit ── */
+.cost-bar{display:flex;height:14px;border-radius:7px;overflow:hidden;background:var(--fill);margin:4px 0 16px;}
+.cost-bar span{display:block;height:100%;}
+.cb-cap{background:var(--accent);}.cb-int{background:#F2994A;}.cb-ass{background:#AF52DE;}
+.cost-legend{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+.cost-legend .cl{display:flex;gap:10px;align-items:flex-start;}
+.cost-legend .sw{width:10px;height:10px;border-radius:3px;margin-top:4px;flex-shrink:0;}
+.cl-k{font-size:13px;color:var(--label-2);}
+.cl-v{font-size:19px;font-weight:600;letter-spacing:-0.01em;font-variant-numeric:tabular-nums;}
+.cl-v small{font-size:12px;font-weight:400;color:var(--label-2);margin-left:6px;}
+.cl-tot{border-left:1px solid var(--sep);padding-left:14px;}
+.cl-tot .cl-v{color:var(--accent);}
+.cost-empty{font-size:14px;color:var(--label-2);grid-column:1/-1;}
+.amort{margin-top:18px;border-top:1px solid var(--sep);padding-top:14px;}
+.amort summary{cursor:pointer;font-size:15px;font-weight:500;color:var(--accent);list-style:none;}
+.amort summary::-webkit-details-marker{display:none;}
+.amort summary::before{content:'›';display:inline-block;margin-right:8px;transition:transform .2s;}
+.amort[open] summary::before{transform:rotate(90deg);}
+.amort-scroll{overflow-x:auto;margin-top:12px;-webkit-overflow-scrolling:touch;}
+.amort-t,.scen-t{width:100%;border-collapse:collapse;font-size:14px;font-variant-numeric:tabular-nums;}
+.amort-t th,.scen-t th{font-size:12.5px;font-weight:500;color:var(--label-2);text-align:right;padding:8px 10px;border-bottom:1px solid var(--sep);white-space:nowrap;}
+.amort-t td{text-align:right;padding:8px 10px;border-bottom:1px solid var(--sep);white-space:nowrap;}
+.amort-t th:first-child,.amort-t td:first-child{text-align:left;color:var(--label-2);}
+.amort-t tbody tr:nth-child(even){background:var(--fill);}
+/* ── Scénarios ── */
+.scen-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-bottom:16px;}
+.scen-sub{font-size:14px;color:var(--label-2);max-width:560px;}
+.scen-empty{font-size:14px;color:var(--label-3);padding:18px 0 6px;}
+.scen-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+.scen-t th{text-align:left;font-size:15px;font-weight:600;color:var(--label);}
+.scen-t td{padding:10px;border-bottom:1px solid var(--sep);white-space:nowrap;}
+.scen-t td:first-child{color:var(--label-2);width:1%;padding-left:0;}
+.scen-t td.best{color:var(--ok);font-weight:600;}
+.scen-t td.over{color:var(--bad);font-weight:600;}
+.scen-act td{border-bottom:none;padding-top:14px;}
+.scen-btn{border:none;border-radius:980px;background:var(--fill-2);color:var(--label);font-size:13px;font-weight:500;padding:7px 12px;margin-right:6px;cursor:pointer;}
+.scen-btn.ghost{background:transparent;color:var(--label-2);}
+.scen-btn:hover{background:#DEDEE3;}
+.scen-note{font-size:12px;color:var(--label-3);margin-top:10px;}
+/* ── Récap ── */
+.recap-modal{max-width:900px!important;max-height:94vh;display:flex;flex-direction:column;padding:0!important;overflow:hidden;}
+.recap-body{overflow-y:auto;background:var(--fill-2);padding:20px;}
+.recap-body #recapPreview{background:#fff;max-width:794px;margin:0 auto;padding:40px 48px;border-radius:6px;box-shadow:0 2px 12px rgba(0,0,0,.08);}
+.recap-foot{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;padding:14px 20px;border-top:1px solid var(--sep);}
+@media(max-width:900px){.cost-legend{grid-template-columns:1fr 1fr;}.cl-tot{border-left:none;padding-left:0;}}
+@media(max-width:700px){
+  .save-bar input#simClient,.save-bar input#simCo,.save-bar input#simEmail{flex:1 1 100%;max-width:none;}
+  .recap-body{padding:10px;}.recap-body #recapPreview{padding:22px 18px;}
+  .recap-foot .sv-btn{flex:1 1 40%;justify-content:center;}
+}
+</style>
+<style id="recap-style">.rc{--rc-navy:#1B2B4B;--rc-gold:#C9A84C;--rc-muted:#6B7A99;--rc-line:#E6E8EE;color:#1a1a2e;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;font-size:13px;line-height:1.5;}
+.rc *{font-family:inherit!important;}
+.rc-head{display:flex;justify-content:space-between;align-items:flex-start;padding-bottom:14px;border-bottom:2px solid var(--rc-navy);margin-bottom:22px;}
+.rc-brand{font-size:18px;font-weight:700;color:var(--rc-navy);}
+.rc-brand-sub,.rc-date{font-size:12px;color:var(--rc-muted);}
+.rc h1{font-size:24px;font-weight:700;color:var(--rc-navy);margin:0 0 4px;letter-spacing:-0.01em;}
+.rc-lead{color:var(--rc-muted);margin:0 0 18px;}
+.rc-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:22px;}
+.rc-kpis div{background:#F6F7FA;border-radius:10px;padding:12px 14px;}
+.rc-kpis span{display:block;font-size:12px;color:var(--rc-muted);}
+.rc-kpis strong{display:block;font-size:22px;font-weight:700;color:var(--rc-navy);margin:2px 0;}
+.rc-kpis strong.ok{color:#1F8A43;}.rc-kpis strong.ko{color:#D1202F;}
+.rc-kpis em{font-style:normal;font-size:11.5px;color:var(--rc-muted);}
+.rc-cols{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+.rc h3{font-size:14px;font-weight:700;color:var(--rc-navy);margin:6px 0 8px;padding-bottom:5px;border-bottom:2px solid var(--rc-gold);display:inline-block;}
+.rc-t{width:100%;border-collapse:collapse;margin-bottom:10px;}
+.rc-t td,.rc-t th{padding:6px 0;border-bottom:1px solid var(--rc-line);vertical-align:top;font-size:12.5px;}
+.rc-t td:last-child{text-align:right;font-weight:600;white-space:nowrap;padding-left:10px;}
+.rc-t tr.b td{font-weight:700;color:var(--rc-navy);}
+.rc-t small{display:block;font-size:11px;font-weight:400;color:var(--rc-muted);}
+.rc-sc th{text-align:right;font-size:12px;color:var(--rc-navy);}
+.rc-sc td,.rc-sc td:last-child{text-align:right;font-weight:500;}
+.rc-sc td:first-child,.rc-sc th:first-child{text-align:left;color:var(--rc-muted);font-weight:400;}
+.rc-note{font-size:12px;color:var(--rc-muted);margin:4px 0 0;}
+.rc-steps{margin:4px 0 18px;}
+.rc-steps div{display:flex;gap:10px;align-items:flex-start;margin-bottom:7px;}
+.rc-steps span{flex:0 0 20px;height:20px;border-radius:50%;background:var(--rc-navy);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:1px;}
+.rc-steps p{margin:0;}
+.rc-foot{border-top:1px solid var(--rc-line);padding-top:10px;font-size:10.5px;color:var(--rc-muted);}
+.rc-foot div:first-child{font-size:12px;color:#1a1a2e;margin-bottom:4px;}
 </style>
 </head>
 <body>
@@ -782,9 +867,13 @@ footer span{color:inherit;}
 
 
   <div class="save-bar">
-    <input type="text" id="simClient" placeholder="Nom du client (ex : Martin Sophie)" autocomplete="off">
+    <input type="text" id="simClient" placeholder="Emprunteur : Prénom Nom" autocomplete="off" aria-label="Emprunteur">
+    <input type="text" id="simCo" placeholder="Co-emprunteur (facultatif)" autocomplete="off" aria-label="Co-emprunteur">
+    <input type="email" id="simEmail" placeholder="Email du client" autocomplete="off" aria-label="Email du client">
+    <div class="sv-break"></div>
     <button class="sv-btn primary" onclick="saveSim()">Enregistrer</button>
     <button class="sv-btn" onclick="openSims()">Simulations<span class="sv-cnt" id="simCount">0</span></button>
+    <button class="sv-btn" onclick="openRecap()">Récap client</button>
     <div class="sv-status" id="simStatus"></div>
     <div class="sv-cloud" id="cloudState"></div>
   </div>
@@ -1020,7 +1109,7 @@ footer span{color:inherit;}
         <div class="sim-box"><span class="sim-label">Capital à emprunter</span><div class="sim-value" id="sim-capital">—</div><div class="sim-sub" id="sim-capital-sub">—</div></div>
         <div class="sim-box"><span class="sim-label">Mensualité totale</span><div class="sim-value" id="sim-mensualite">—</div><div class="sim-sub" id="sim-mensualite-sub">dont prêt principal : —</div></div>
         <div class="sim-box"><span class="sim-label">Taux d'endettement</span><div class="sim-value" id="sim-taux">—</div><div class="sim-sub" id="sim-taux-max">Max : —</div></div>
-        <div class="sim-box"><span class="sim-label">Total remboursé</span><div class="sim-value" id="sim-total">—</div><div class="sim-sub" id="sim-interets">Dont intérêts : —</div></div>
+        <div class="sim-box"><span class="sim-label">Total remboursé (prêt principal)</span><div class="sim-value" id="sim-total">—</div><div class="sim-sub" id="sim-interets">Dont intérêts : —</div></div>
       </div>
       <!-- Décomposition simulation -->
       <div id="sim-decomp" style="display:none;background:var(--off);border:1px solid var(--border);border-radius:12px;padding:14px 18px;margin-top:14px;">
@@ -1039,6 +1128,30 @@ footer span{color:inherit;}
         Utiliser cette simulation pour l&#39;attestation &#8594;
       </button>
     </div>
+
+    <!-- COÛT DU CRÉDIT -->
+    <div class="sim-card" id="cost-card">
+      <div class="s-card-title">Coût du crédit</div>
+      <div class="cost-bar" id="costBar"></div>
+      <div class="cost-legend" id="costLegend"></div>
+      <details class="amort">
+        <summary>Tableau d'amortissement du prêt principal</summary>
+        <div class="amort-scroll"><table class="amort-t" id="amortTable"></table></div>
+      </details>
+    </div>
+
+    <!-- SCÉNARIOS -->
+    <div class="sim-card" id="scen-card">
+      <div class="scen-head">
+        <div>
+          <div class="s-card-title" style="margin-bottom:4px;">Comparer des scénarios</div>
+          <div class="scen-sub">Fige la simulation actuelle, change un paramètre (durée, apport, PTZ…), puis fige à nouveau. Jusqu'à 3 scénarios.</div>
+        </div>
+        <button class="sv-btn primary" onclick="addScenario()">Figer ce scénario</button>
+      </div>
+      <div id="scenGrid"></div>
+    </div>
+
 
   </div>
 </div>
@@ -1562,6 +1675,17 @@ footer span{color:inherit;}
     </div>
   </div>
 </div>
+<div class="modal-overlay" id="recap-modal" onclick="if(event.target===this)closeRecap()">
+  <div class="modal recap-modal" role="dialog" aria-labelledby="recapTitle">
+    <div class="ptz-head"><h3 id="recapTitle">Récap client</h3><button class="ptz-x" onclick="closeRecap()" aria-label="Fermer">✕</button></div>
+    <div class="recap-body"><div id="recapPreview"></div></div>
+    <div class="recap-foot">
+      <button class="sv-btn" onclick="recapPrint()">Imprimer</button>
+      <button class="sv-btn" onclick="recapShare()">Partager</button>
+      <button class="sv-btn primary" onclick="recapDownload()">Télécharger le PDF</button>
+    </div>
+  </div>
+</div>
 <div class="modal-overlay" id="sims-modal" onclick="if(event.target===this)closeSims()">
   <div class="modal sims-modal">
     <h3>Simulations enregistrées</h3>
@@ -1609,6 +1733,7 @@ function switchPage(id, el) {
   document.getElementById('page-' + id).classList.add('active');
   el.classList.add('active');
   window.scrollTo({top:0});
+  if(typeof prefillFromSim==='function')prefillFromSim(id);
 }
 
 /* ══════════════════════════
@@ -1670,11 +1795,11 @@ function calc() {
   const chargesCompl=mensPtz+mensPc1+mensPc2;
 
   const mensMax=rev*te-charges-chargesCompl;
-  const tm=(ti+ta)/12, n=dur*12;
-
+  const n=dur*12;
+  // Mensualité = annuité hors assurance + assurance sur capital initial (méthode bancaire usuelle)
+  const fA=mensualite(1,ti,dur);
   let capPrincipal=0;
-  if(tm>0&&mensMax>0) capPrincipal=mensMax*(1-Math.pow(1+tm,-n))/tm;
-  else if(mensMax>0) capPrincipal=mensMax*n;
+  if(mensMax>0&&(fA+ta/12)>0) capPrincipal=mensMax/(fA+ta/12);
 
   const capTotal=capPrincipal+ptzM+pc1M+pc2M;
   const mensTotal=mensMax+chargesCompl;
@@ -1682,7 +1807,7 @@ function calc() {
   const prixMax=(ap+capTotal-fgE-fc-tr)/(1+fn);
   const fnE=prixMax*fn;
   const coutTotal=capTotal+fgE+fc+tr;
-  const coutInt=mensMax*n-capPrincipal;
+  const coutInt=capPrincipal*fA*n-capPrincipal;
   const teReel=rev>0?(mensTotal+charges)/rev:0;
 
   document.getElementById('res-capital').textContent=fmtCur(capTotal);
@@ -1771,13 +1896,12 @@ function calcSim() {
   const capPrincipalBrut=Math.max(totalNecessaire-capCompl,0);
   const cap=capPrincipalBrut+capPrincipalBrut*fg;
 
-  const tm=(ti+ta)/12, n=dur*12;
-  let mens=0;
-  if(tm>0&&cap>0) mens=cap*tm/(1-Math.pow(1+tm,-n));
-  else if(cap>0) mens=cap/n;
-
+  const n=dur*12;
+  const mensHA=cap>0?mensualite(cap,ti,dur):0;
+  const assMens=cap*ta/12;
+  const mens=mensHA+assMens;
   const mensTotal=mens+mensPtz+mensPc1+mensPc2;
-  const total=mens*n, coutInt=total-cap;
+  const total=mens*n, coutInt=mensHA*n-cap, assTot=assMens*n;
   const teR=rev>0?(mensTotal+chargesExist)/rev:0;
 
   const capTotal=cap+capCompl;
@@ -1788,7 +1912,7 @@ function calcSim() {
   document.getElementById('sim-taux').textContent=fmtPct(teR);
   document.getElementById('sim-taux-max').textContent='Maximum : '+fmtPct(te);
   document.getElementById('sim-total').textContent=fmtCur(total);
-  document.getElementById('sim-interets').textContent='Dont intérêts prêt principal : '+fmtCur(coutInt);
+  document.getElementById('sim-interets').textContent='Intérêts '+fmtCur(coutInt)+' · assurance '+fmtCur(assTot);
 
   // Décomposition simulation
   const hasCompl=ptzOn||pc1On||pc2On;
@@ -1828,7 +1952,9 @@ function calcSim() {
   else{sv.classList.add('bad');sd.style.background='#B84040';document.getElementById('sim-verdict-titre').textContent='✗ Projet non finançable en l\'état';document.getElementById('sim-verdict-sub').textContent=fmtPct(teR)+' d\'endettement · Dépasse '+fmtPct(te)+' · Augmenter l\'apport ou réduire le prix';}
 
   // Store for transfer to attestation (simulation par prix)
-  window._simPrixData = {prix:prix, capTotal:capTotal, capPrincipal:cap, mens:mens, mensTotal:mensTotal, fnE:fnE, total:total, coutInt:coutInt, teR:teR, ptzOn:ptzOn, ptzM:ptzM, pc1On:pc1On, pc1M:pc1M, pc2On:pc2On, pc2M:pc2M};
+  window._simPrixData = {prix:prix, capTotal:capTotal, capPrincipal:cap, mens:mens, mensHA:mensHA, assMens:assMens, assTot:assTot, mensTotal:mensTotal, fnE:fnE, fgE:capPrincipalBrut*fg, fc:fc, tr:tr, ap:ap, total:total, coutInt:coutInt, teR:teR, te:te, rev:rev, dur:dur, ti:ti, ta:ta,
+    ptzOn:ptzOn, ptzM:ptzM, ptzD:ptzD, ptzDiff:ptzDiff, mensPtz:mensPtz, pc1On:pc1On, pc1M:pc1M, pc1D:pc1D, pc1T:pc1T, mensPc1:mensPc1, pc2On:pc2On, pc2M:pc2M, pc2D:pc2D, pc2T:pc2T, mensPc2:mensPc2};
+  if(typeof renderCost==='function')renderCost();
 }
 
 
@@ -1850,7 +1976,7 @@ function saveSim(){
   const values={},checks={};
   simFields().forEach(el=>{if(el.type==='checkbox')checks[el.id]=el.checked;else values[el.id]=el.value;});
   const txt=id=>(document.getElementById(id)||{}).textContent||'';
-  const rec={id:_simCurrentId||Date.now().toString(36),client,date:new Date().toISOString(),values,checks,
+  const rec={id:_simCurrentId||Date.now().toString(36),client,date:new Date().toISOString(),values,checks,ptz:ptzSnapshot(),scenarios,
     summary:{capital:txt('res-capital'),prixMax:txt('res-prix-bien'),prix:values.prixBien,mens:txt('sim-mensualite'),taux:txt('sim-taux')}};
   const list=simLoadAll();
   const i=list.findIndex(r=>r.id===rec.id);
@@ -1867,7 +1993,10 @@ function loadSim(id){
   [['ptzActif','ptz-section'],['pretCompl1Actif','pretCompl1-section'],['pretCompl2Actif','pretCompl2-section']]
     .forEach(([c,sec])=>{document.getElementById(sec).style.display=document.getElementById(c).checked?'block':'none';});
   document.getElementById('simClient').value=rec.client;
+  ['simCo','simEmail'].forEach(k=>{if(!(rec.values&&k in rec.values))document.getElementById(k).value='';});
   _simCurrentId=rec.id;
+  ptzRestore(rec.ptz);
+  scenarios=Array.isArray(rec.scenarios)?rec.scenarios:[];renderScenarios();
   calc();
   closeSims();
   const tab=document.querySelector('.nav .ntab');if(tab&&!document.getElementById('page-sim').classList.contains('active'))switchPage('sim',tab);
@@ -1992,6 +2121,247 @@ async function cloudInit(){
   renderCloud();if(sbUser)cloudSync();
 }
 document.addEventListener('DOMContentLoaded',cloudInit);
+
+/* ════════════════════════════════════
+   COÛT DU CRÉDIT + AMORTISSEMENT
+════════════════════════════════════ */
+function amortYears(cap,ti,ta,dur){
+  const n=dur*12,tm=ti/12,pay=mensualite(cap,ti,dur),ass=cap*ta/12;
+  let crd=cap;const years=[];
+  for(let y=1;y<=dur;y++){
+    let int=0,prin=0;
+    for(let m=0;m<12&&crd>0.005;m++){const i=crd*tm;const p=Math.min(pay-i,crd);int+=i;prin+=p;crd-=p;}
+    years.push({y,pay:pay*12,ass:ass*12,int,prin,crd:Math.max(crd,0)});
+  }
+  return years;
+}
+function renderCost(){
+  const d=window._simPrixData;if(!d)return;
+  const bar=document.getElementById('costBar'),leg=document.getElementById('costLegend'),tab=document.getElementById('amortTable');
+  if(!bar)return;
+  if(!(d.capPrincipal>0)){bar.innerHTML='';leg.innerHTML='<div class="cost-empty">Renseigne un prix de bien pour voir le coût du crédit.</div>';tab.innerHTML='';return;}
+  const parts=[{k:'Capital emprunté',v:d.capPrincipal,c:'cap'},{k:'Intérêts',v:d.coutInt,c:'int'},{k:'Assurance',v:d.assTot,c:'ass'}];
+  const tot=parts.reduce((a,p)=>a+p.v,0);
+  bar.innerHTML=parts.map(p=>`<span class="cb-${p.c}" style="width:${(p.v/tot*100).toFixed(2)}%" title="${p.k}"></span>`).join('');
+  leg.innerHTML=parts.map(p=>`<div class="cl"><span class="sw cb-${p.c}"></span><div><div class="cl-k">${p.k}</div><div class="cl-v">${fmtCur(p.v)}<small>${Math.round(p.v/tot*100)} %</small></div></div></div>`).join('')+
+    `<div class="cl cl-tot"><div><div class="cl-k">Coût du crédit</div><div class="cl-v">${fmtCur(d.coutInt+d.assTot)}<small>sur ${d.dur} ans</small></div></div></div>`;
+  const ys=amortYears(d.capPrincipal,d.ti,d.ta,d.dur);
+  tab.innerHTML=`<thead><tr><th>Année</th><th>Mensualité</th><th>Intérêts</th><th>Capital remboursé</th><th>Assurance</th><th>Capital restant</th></tr></thead><tbody>`+
+    ys.map(r=>`<tr><td>${r.y}</td><td>${fmtCur((r.pay+r.ass)/12)}</td><td>${fmtCur(r.int)}</td><td>${fmtCur(r.prin)}</td><td>${fmtCur(r.ass)}</td><td>${fmtCur(r.crd)}</td></tr>`).join('')+'</tbody>';
+}
+
+/* ════════════════════════════════════
+   SCÉNARIOS
+════════════════════════════════════ */
+let scenarios=[];
+const SCEN_EXCL=new Set(['simClient','simCo','simEmail']);
+function scenSnapshot(){
+  const values={},checks={};
+  simFields().forEach(el=>{if(SCEN_EXCL.has(el.id))return;if(el.type==='checkbox')checks[el.id]=el.checked;else values[el.id]=el.value;});
+  return {values,checks};
+}
+function addScenario(){
+  calc();
+  const d=window._simPrixData||{};
+  if(!(d.prix>0)){simStatus('Renseigne un prix de bien avant de figer un scénario.');return;}
+  if(scenarios.length>=3){simStatus('3 scénarios maximum : retires-en un pour en figer un nouveau.');return;}
+  const snap=scenSnapshot();
+  const letter='ABC'.split('').find(l=>!scenarios.some(s=>s.name==='Scénario '+l));
+  scenarios.push({id:Date.now().toString(36),name:'Scénario '+letter,...snap,
+    m:{prix:d.prix,tr:d.tr,ap:d.ap,capTotal:d.capTotal,capPrincipal:d.capPrincipal,mensTotal:d.mensTotal,teR:d.teR,te:d.te,cout:d.coutInt+d.assTot,dur:d.dur,ti:d.ti,ta:d.ta,ptzM:d.ptzOn?d.ptzM:0,compl:(d.pc1On?d.pc1M:0)+(d.pc2On?d.pc2M:0)}});
+  renderScenarios();simStatus(`${scenarios[scenarios.length-1].name} figé. Change un paramètre puis fige le suivant.`);
+}
+function removeScenario(id){scenarios=scenarios.filter(s=>s.id!==id);renderScenarios();}
+function loadScenario(id){
+  const sc=scenarios.find(s=>s.id===id);if(!sc)return;
+  Object.entries(sc.values).forEach(([k,v])=>{const el=document.getElementById(k);if(el)el.value=v;});
+  Object.entries(sc.checks).forEach(([k,v])=>{const el=document.getElementById(k);if(el)el.checked=v;});
+  [['ptzActif','ptz-section'],['pretCompl1Actif','pretCompl1-section'],['pretCompl2Actif','pretCompl2-section']].forEach(([c,sec])=>{document.getElementById(sec).style.display=document.getElementById(c).checked?'block':'none';});
+  calc();simStatus(`${sc.name} rechargé dans le simulateur.`);
+  document.getElementById('page-sim').scrollIntoView({behavior:'smooth'});
+}
+function scenRows(){
+  return [
+    ['Prix du bien',m=>fmtCur(m.prix)],
+    ['Apport',m=>fmtCur(m.ap)],
+    ['Durée',m=>m.dur+' ans'],
+    ['Taux (hors assurance)',m=>(m.ti*100).toFixed(2).replace('.',',')+' %'],
+    ['PTZ',m=>m.ptzM?fmtCur(m.ptzM):'—'],
+    ['Montant emprunté',m=>fmtCur(m.capTotal)],
+    ['Mensualité totale',m=>fmtCur(m.mensTotal),'mensTotal'],
+    ["Taux d'endettement",m=>(m.teR*100).toFixed(1).replace('.',',')+' %','teR'],
+    ['Coût du crédit',m=>fmtCur(m.cout),'cout'],
+  ];
+}
+function renderScenarios(){
+  const g=document.getElementById('scenGrid');if(!g)return;
+  if(!scenarios.length){g.innerHTML='<div class="scen-empty">Aucun scénario figé pour le moment.</div>';return;}
+  const best={};['mensTotal','teR','cout'].forEach(k=>{best[k]=Math.min(...scenarios.map(s=>s.m[k]));});
+  const many=scenarios.length>1;
+  g.innerHTML=`<div class="scen-scroll"><table class="scen-t"><thead><tr><th></th>${scenarios.map(s=>`<th>${escHtml(s.name)}</th>`).join('')}</tr></thead><tbody>`+
+    scenRows().map(([lbl,f,k])=>`<tr><td>${lbl}</td>${scenarios.map(s=>`<td class="${k&&many&&s.m[k]===best[k]?'best':''}${k&&s.m.teR>s.m.te&&k==='teR'?' over':''}">${f(s.m)}</td>`).join('')}</tr>`).join('')+
+    `<tr class="scen-act"><td></td>${scenarios.map(s=>`<td><button class="scen-btn" onclick="loadScenario('${s.id}')">Recharger</button><button class="scen-btn ghost" onclick="removeScenario('${s.id}')">Retirer</button></td>`).join('')}</tr></tbody></table></div>`+
+    (many?'<div class="scen-note">En vert : la valeur la plus avantageuse.</div>':'');
+}
+
+/* ════════════════════════════════════
+   DOSSIER CLIENT PARTAGÉ ENTRE ONGLETS
+════════════════════════════════════ */
+function splitName(full){
+  const t=(full||'').trim().split(/\s+/).filter(Boolean);
+  if(!t.length)return {prenom:'',nom:''};
+  if(t.length===1)return {prenom:'',nom:t[0]};
+  // "NOM Prénom" si le premier mot est en majuscules, sinon "Prénom Nom"
+  if(t[0]===t[0].toUpperCase()&&t[0].length>1&&t[1]!==t[1].toUpperCase())return {prenom:t.slice(1).join(' '),nom:t[0]};
+  return {prenom:t[0],nom:t.slice(1).join(' ')};
+}
+function fillIfEmpty(id,val){const el=document.getElementById(id);if(el&&!el.value.trim()&&val){el.value=val;return true;}return false;}
+function prefillFromSim(page){
+  const emp=document.getElementById('simClient').value.trim(),co=document.getElementById('simCo').value.trim(),mail=document.getElementById('simEmail').value.trim();
+  if(!emp&&!co&&!mail)return;
+  const e=splitName(emp),c=splitName(co);
+  if(page==='gen'){
+    fillIfEmpty('empName',emp);fillIfEmpty('empEmail',mail);
+    if(co){if(!GS.hasCo)toggleCo();fillIfEmpty('coName',co);}
+  }else if(page==='attest'){
+    fillIfEmpty('a_prenom',e.prenom);fillIfEmpty('a_nom',e.nom);fillIfEmpty('a_email_client',mail);
+    if(co){if(!coEmpActif)toggleCoEmp();fillIfEmpty('a_prenom2',c.prenom);fillIfEmpty('a_nom2',c.nom);}
+    updatePreview();
+  }else if(page==='cmp'){
+    fillIfEmpty('clientName',co?`${emp} & ${co}`:emp);
+    const prix=getVal('prixBien');if(prix>0)fillIfEmpty('projetMontant',String(Math.round(prix)));
+  }else if(page==='mrh'){
+    fillIfEmpty('m_prenom',e.prenom);fillIfEmpty('m_nom',e.nom);
+    if(typeof mrhPreview==='function')mrhPreview();
+  }
+}
+const PTZ_FIELDS=['ptzCommune','ptzZone','ptzType','ptzOcc','ptzRfr','ptzPrix','ptzTrav','ptzPrimo','ptzDpe'];
+function ptzSnapshot(){const o={};PTZ_FIELDS.forEach(id=>{const el=document.getElementById(id);if(el)o[id]=el.type==='checkbox'?el.checked:el.value;});o.official=ptzOfficialZone;return o;}
+function ptzRestore(o){
+  PTZ_FIELDS.forEach(id=>{const el=document.getElementById(id);if(!el)return;if(el.type==='checkbox')el.checked=o&&id in o?!!o[id]:true;else el.value=o&&o[id]!=null?o[id]:(id==='ptzOcc'?'2':(id==='ptzType'?'neuf_coll':''));});
+  ptzOfficialZone=o&&o.official||null;
+  document.getElementById('ptzZoneHint').textContent=o&&o.ptzZone?'Zone enregistrée avec la simulation.':'';
+}
+
+/* ════════════════════════════════════
+   RÉCAP CLIENT (PDF)
+════════════════════════════════════ */
+function recapHTML(){
+  const d=window._simPrixData||{},cap=window._simData||{};
+  const emp=document.getElementById('simClient').value.trim(),co=document.getElementById('simCo').value.trim();
+  const who=[emp,co].filter(Boolean).join(' et ')||'Votre projet';
+  const today=new Date().toLocaleDateString('fr-FR',{day:'numeric',month:'long',year:'numeric'});
+  const pct=v=>(v*100).toFixed(2).replace('.',',')+' %';
+  const pct1=v=>(v*100).toFixed(1).replace('.',',')+' %';
+  const row=(k,v,b)=>`<tr${b?' class="b"':''}><td>${k}</td><td>${v}</td></tr>`;
+  const totalProjet=(d.prix||0)+(d.fnE||0)+(d.tr||0)+(d.fc||0)+(d.fgE||0);
+  const loans=[[`Prêt principal`,d.capPrincipal,`${pct(d.ti)} · ${d.dur} ans`,d.mens]];
+  if(d.ptzOn&&d.ptzM>0)loans.push(['Prêt à taux zéro',d.ptzM,`0 % · ${d.ptzD} ans${d.ptzDiff?` dont ${d.ptzDiff} ans de différé`:''}`,d.ptzDiff?null:d.mensPtz]);
+  if(d.pc1On&&d.pc1M>0)loans.push([document.getElementById('pretCompl1Nom').value||'Prêt complémentaire',d.pc1M,`${pct(d.pc1T)} · ${d.pc1D} ans`,d.mensPc1]);
+  if(d.pc2On&&d.pc2M>0)loans.push([document.getElementById('pretCompl2Nom').value||'Prêt complémentaire',d.pc2M,`${pct(d.pc2T)} · ${d.pc2D} ans`,d.mensPc2]);
+  const ok=d.teR<=d.te;
+  const sc=scenarios.length>1?`
+    <h3>Scénarios étudiés ensemble</h3>
+    <table class="rc-t rc-sc"><thead><tr><th></th>${scenarios.map(s=>`<th>${escHtml(s.name)}</th>`).join('')}</tr></thead><tbody>
+    ${scenRows().map(([l,f])=>`<tr><td>${l}</td>${scenarios.map(s=>`<td>${f(s.m)}</td>`).join('')}</tr>`).join('')}</tbody></table>`:'';
+  return `<div class="rc">
+  <div class="rc-head">
+    <div><div class="rc-brand">LD Courtage</div><div class="rc-brand-sub">Loïc Da Rocha · Courtier en prêt immobilier</div></div>
+    <div class="rc-date">${today}</div>
+  </div>
+  <h1>${escHtml(who)}</h1>
+  <p class="rc-lead">Récapitulatif de notre rendez-vous : votre projet, le financement envisagé et les prochaines étapes.</p>
+
+  <div class="rc-kpis">
+    <div><span>Mensualité totale</span><strong>${fmtCur(d.mensTotal)}</strong><em>assurance comprise</em></div>
+    <div><span>Montant emprunté</span><strong>${fmtCur(d.capTotal)}</strong><em>sur ${d.dur} ans</em></div>
+    <div><span>Taux d'endettement</span><strong class="${ok?'ok':'ko'}">${pct1(d.teR)}</strong><em>maximum ${pct1(d.te)}</em></div>
+  </div>
+
+  <div class="rc-cols">
+    <div>
+      <h3>Votre projet</h3>
+      <table class="rc-t">
+        ${row('Prix du bien',fmtCur(d.prix))}
+        ${d.tr?row('Travaux',fmtCur(d.tr)):''}
+        ${row('Frais de notaire (estimation)',fmtCur(d.fnE))}
+        ${d.fgE?row('Frais de garantie (estimation)',fmtCur(d.fgE)):''}
+        ${d.fc?row('Frais de courtage',fmtCur(d.fc)):''}
+        ${row('Coût total du projet',fmtCur(totalProjet),1)}
+        ${row('Apport personnel',fmtCur(d.ap))}
+        ${row('Montant à financer',fmtCur(d.capTotal),1)}
+      </table>
+    </div>
+    <div>
+      <h3>Financement envisagé</h3>
+      <table class="rc-t">
+        ${loans.map(l=>`<tr><td>${escHtml(l[0])}<small>${l[2]}</small></td><td>${fmtCur(l[1])}<small>${l[3]!=null?fmtCur(l[3])+' / mois':'pas de mensualité pendant le différé'}</small></td></tr>`).join('')}
+        ${row('Assurance emprunteur',`${fmtCur(d.assMens)} / mois`)}
+        ${row('Coût total du crédit',fmtCur(d.coutInt+d.assTot),1)}
+      </table>
+      ${cap.capTotal>0?`<p class="rc-note">Capacité d'emprunt maximale estimée : <b>${fmtCur(cap.capTotal)}</b>, soit un bien jusqu'à environ <b>${fmtCur(cap.prixMax)}</b>.</p>`:''}
+    </div>
+  </div>
+  ${sc}
+  <h3>Prochaines étapes</h3>
+  <div class="rc-steps">
+    <div><span>1</span><p><b>Vous m'envoyez les pièces justificatives</b> listées dans mon mail, en scan ou photo lisible.</p></div>
+    <div><span>2</span><p><b>Je présente votre dossier</b> à nos banques partenaires et négocie les meilleures conditions, assurance comprise.</p></div>
+    <div><span>3</span><p><b>Je vous présente les offres</b> et nous choisissons ensemble la plus adaptée, jusqu'à la signature chez le notaire.</p></div>
+  </div>
+  <div class="rc-foot">
+    <div><b>Loïc Da Rocha</b> · 06 15 27 25 45 · l.darocha@tf-courtage.fr</div>
+    <div>Simulation non contractuelle établie sur la base des informations communiquées, sous réserve d'acceptation par les établissements prêteurs. TF COURTAGE, 60 av. Jean Jaurès, 63450 Romagnat · ORIAS 19000097.</div>
+  </div>
+</div>`;
+}
+function openRecap(){
+  calc();
+  const d=window._simPrixData||{};
+  if(!(d.prix>0)){simStatus('Renseigne un prix de bien pour générer le récap.');return;}
+  document.getElementById('recapPreview').innerHTML=recapHTML();
+  document.getElementById('recap-modal').classList.add('open');
+}
+function closeRecap(){document.getElementById('recap-modal').classList.remove('open');}
+async function recapPdf(){
+  const A4_W=794;
+  const wrap=document.createElement('div');
+  wrap.style.cssText='position:fixed;left:-9999px;top:0;width:'+A4_W+'px;background:#fff;z-index:-1;';
+  const inner=document.createElement('div');
+  inner.className='rc-page';
+  inner.style.cssText='width:'+A4_W+'px;background:#fff;padding:44px 52px;box-sizing:border-box;';
+  inner.innerHTML=recapHTML();
+  wrap.appendChild(inner);document.body.appendChild(wrap);
+  try{
+    await new Promise(r=>setTimeout(r,120));
+    const canvas=await safeCanvas(inner,A4_W);
+    const {jsPDF}=window.jspdf;
+    const pdf=new jsPDF({orientation:'p',unit:'pt',format:'a4'});
+    const pw=pdf.internal.pageSize.getWidth(),ph=pdf.internal.pageSize.getHeight();
+    const ih=canvas.height*(pw/canvas.width);
+    if(ih<=ph)pdf.addImage(canvas.toDataURL('image/jpeg',0.95),'JPEG',0,0,pw,ih);
+    else{const sc=Math.min(1,ph/ih);pdf.addImage(canvas.toDataURL('image/jpeg',0.95),'JPEG',(pw-pw*sc)/2,0,pw*sc,ih*sc);}
+    const who=(document.getElementById('simClient').value.trim()||'client').replace(/[^\wÀ-ÿ-]+/g,'_');
+    return {pdf,filename:`Recap_${who}_${new Date().toISOString().slice(0,10)}.pdf`};
+  }finally{document.body.removeChild(wrap);}
+}
+async function recapDownload(){try{showToast('Préparation du PDF…');const {pdf,filename}=await recapPdf();savePdfSafe(pdf,filename);showToast('PDF téléchargé.','success');}catch(e){console.error(e);showToast('Erreur lors de la création du PDF.','error');}}
+async function recapShare(){
+  try{
+    showToast('Préparation du PDF…');
+    const {pdf,filename}=await recapPdf();
+    const file=new File([pdf.output('blob')],filename,{type:'application/pdf'});
+    if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:'Récapitulatif de votre projet'});showToast('Document partagé.','success');}
+    else{savePdfSafe(pdf,filename);showToast('Partage non disponible ici : PDF téléchargé.','success');}
+  }catch(e){if(e&&e.name==='AbortError')return;console.error(e);showToast('Erreur lors du partage.','error');}
+}
+function recapPrint(){
+  const w=window.open('','_blank');if(!w){showToast('Autorise les fenêtres pop-up pour imprimer.','error');return;}
+  w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>Récapitulatif</title><style>${document.getElementById('recap-style').textContent}@page{size:A4;margin:14mm}body{margin:0}</style></head><body class="rc-page">${recapHTML()}</body></html>`);
+  w.document.close();setTimeout(()=>{w.focus();w.print();},300);
+}
+document.addEventListener('DOMContentLoaded',renderScenarios);
+
 
 /* ════════════════════════════════════
    ÉLIGIBILITÉ PTZ — barèmes en vigueur (décret 2024-304 modifié 2025, PTZ prolongé jusqu'au 31/12/2027)
@@ -2148,7 +2518,8 @@ function resetForm() {
   ['ptz-section','pretCompl1-section','pretCompl2-section'].forEach(id=>document.getElementById(id).style.display='none');
   document.getElementById('pretCompl1Nom').value='Action Logement';
   document.getElementById('pretCompl2Nom').value='Prêt collectivité';
-  document.getElementById('simClient').value='';_simCurrentId=null;
+  ['simClient','simCo','simEmail'].forEach(k=>document.getElementById(k).value='');_simCurrentId=null;
+  scenarios=[];renderScenarios();ptzRestore(null);
   calc();
 }
 
