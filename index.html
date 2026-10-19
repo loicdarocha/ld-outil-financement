@@ -1554,6 +1554,7 @@ footer span{color:inherit;}
           </div>
         </div>
         <span class="field-hint" style="margin-top:-8px;margin-bottom:12px;">Frais d'agence compris, hors frais de notaire et de garantie.</span>
+        <label class="ptz-check" id="ptzDpeRow" style="display:none"><input type="checkbox" id="ptzDpe" checked onchange="ptzEval()"> DPE classé D ou mieux, avant ou après travaux</label>
         <label class="ptz-check"><input type="checkbox" id="ptzPrimo" checked onchange="ptzEval()"> Pas propriétaire de sa résidence principale depuis 2 ans</label>
         <span class="field-hint">Exceptions : carte d'invalidité, AAH ou AEEH, ou logement détruit par une catastrophe.</span>
       </div>
@@ -2061,6 +2062,8 @@ function ptzEval(){
   const trav=parseFloat(document.getElementById('ptzTrav').value)||0;
   const primo=document.getElementById('ptzPrimo').checked;
   const cout=prix+trav;
+  const dpe=document.getElementById('ptzDpe').checked;
+  document.getElementById('ptzDpeRow').style.display=type==='ancien_trav'?'flex':'none';
   ptzLast=null;
   document.getElementById('ptzRfrHint').textContent='Revenu fiscal de référence de l\'année N-2, de tous les occupants.';
   const wait=(t,r)=>{box.innerHTML=`<div class="ptz-verdict wait"><span class="dot"></span>${t}</div><div class="ptz-reason">${r}</div>`;};
@@ -2068,6 +2071,7 @@ function ptzEval(){
   if(!z)return wait('Indique la commune du bien','La zone détermine les plafonds de revenus et le montant du PTZ.');
   if(!primo)return no('Non éligible','L\'emprunteur doit ne pas avoir été propriétaire de sa résidence principale au cours des 2 dernières années, sauf exception.');
   if(type==='ancien_trav'&&!(z==='B2'||z==='C'))return no('Non éligible dans cette zone',`Dans l'ancien, le PTZ n'est ouvert qu'en zones B2 et C. Ce bien est en zone ${zSel==='Abis'?'A bis':zSel}.`);
+  if(type==='ancien_trav'&&!dpe)return no('Non éligible','Dans l\'ancien, le logement doit atteindre au moins la classe D du DPE, avant ou après travaux.');
   if(!cout||!rfr)return wait('Complète les montants','Renseigne le revenu fiscal de référence et le coût du projet pour vérifier l\'éligibilité.');
   if(type==='ancien_trav'&&trav<cout*0.25){
     const mini=Math.ceil(prix/3);
@@ -2080,10 +2084,15 @@ function ptzEval(){
   const plafondRev=tr[3]*coef;
   if(quotient>tr[3])return no('Revenus trop élevés',`Revenu retenu ${eur(revRetenu)}${revRetenu>rfr?' (coût du projet ÷ 9, supérieur au RFR)':''}, pour un plafond de ${eur(plafondRev)} pour ${occ} personne${occ>1?'s':''} en zone ${zSel==='Abis'?'A bis':zSel}.`);
   const t=tr.findIndex(x=>quotient<=x);
-  const q=(type==='neuf_mi'?PTZ_QUOTITE.mi:PTZ_QUOTITE.std)[t];
+  const q=type==='hlm'?0.2:(type==='neuf_mi'?PTZ_QUOTITE.mi:PTZ_QUOTITE.std)[t];
   const plafOp=PTZ_PLAF_OP[z][Math.min(occ,5)-1];
   const base=Math.min(cout,plafOp);
-  const montant=Math.floor(base*q);
+  const montantQuot=Math.floor(base*q);
+  // Plafond légal : le PTZ ne dépasse pas les autres prêts de plus de 2 ans (+25 % si quotité de 50 %)
+  const k=q===0.5?1.25:1;
+  const besoin=prix*(1+getVal('fraisNotaire')/100)+trav+getVal('fraisCourtage')-getVal('apport');
+  const capPrets=Math.max(0,Math.floor(k*besoin/(1+k)));
+  const montant=Math.min(montantQuot,capPrets);
   const d=PTZ_DUREE[t];
   const mensDiff=d.diff>0?0:montant/(d.tot*12);
   const mensApres=montant/((d.tot-d.diff)*12);
@@ -2091,7 +2100,8 @@ function ptzEval(){
   box.innerHTML=`<div class="ptz-verdict ok"><span class="dot"></span>Éligible, tranche ${t+1}</div>
     <div class="ptz-reason">Revenu retenu ${eur(revRetenu)} pour un plafond de ${eur(plafondRev)}.</div>
     <div class="ptz-amount">${eur(montant)}</div>
-    <div class="ptz-reason">${Math.round(q*100)} % de ${eur(base)}${cout>plafOp?` (coût plafonné à ${eur(plafOp)})`:''}</div>
+    <div class="ptz-reason">${type==='hlm'?'20 % (quotité fixe pour un logement social)':Math.round(q*100)+' %'} de ${eur(base)}${cout>plafOp?` (coût plafonné à ${eur(plafOp)})`:''}</div>
+    ${montant<montantQuot?`<div class="ptz-reason">Ramené de ${eur(montantQuot)} à ${eur(montant)} : le PTZ ne peut pas dépasser ${k>1?'125 % des':'les'} autres prêts (apport de ${eur(getVal('apport'))} pris en compte).</div>`:''}
     <div class="ptz-rows">
       <div><span>Durée totale</span><span>${d.tot} ans</span></div>
       <div><span>Différé</span><span>${d.diff?d.diff+' ans sans mensualité':'aucun'}</span></div>
@@ -2099,7 +2109,7 @@ function ptzEval(){
       <div><span>Zone · foyer</span><span>${zSel==='Abis'?'A bis':zSel} · ${occ} pers. (coef. ${String(coef).replace('.',',')})</span></div>
     </div>
     <button class="ptz-apply" onclick="ptzApply()">Ajouter ce PTZ à la simulation</button>
-    <div class="ptz-note">Le PTZ ne peut pas dépasser le montant des autres prêts de plus de 2 ans. Résultat indicatif, à confirmer par la banque.</div>`;
+    <div class="ptz-note">Plafond « autres prêts » calculé avec l'apport, les frais de notaire et de courtage du simulateur. Résultat indicatif, à confirmer par la banque.</div>`;
 }
 function ptzApply(){
   if(!ptzLast)return;
