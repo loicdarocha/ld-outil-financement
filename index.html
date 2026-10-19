@@ -1432,50 +1432,59 @@ function showBtab(w){
   document.getElementById('btab-'+w).classList.add('active');
 }
 
-let _en='',_cn='';
+let _en='',_cn='',_sE='',_sC='',_rawE='',_rawC='';
+// Suffixes « de X » : nom si renseigné, sinon formule neutre (vide si emprunteur seul)
+function setNames(){
+  _rawE=document.getElementById('empName').value.trim();
+  _rawC=GS.hasCo?document.getElementById('coName').value.trim():'';
+  _en=_rawE||'Emprunteur';
+  _cn=GS.hasCo?(_rawC||'Co-emprunteur'):'';
+  _sE=_rawE?` de ${_rawE}`:(GS.hasCo?" de l'emprunteur":'');
+  _sC=GS.hasCo?(_rawC?` de ${_rawC}`:' du co-emprunteur'):'';
+}
 function buildDocs(){
-  const en=_en,cn=_cn,hasCo=GS.hasCo;
+  const sE=_sE,sC=_sC,hasCo=GS.hasCo;
   const docs=[];
   function a(txt,who='common'){docs.push({txt,who});}
 
-  a(`Pièce d'identité de ${en}`,'emp');
-  if(hasCo) a(`Pièce d'identité de ${cn}`,'co');
+  a(`Pièce d'identité${sE}`,'emp');
+  if(hasCo) a(`Pièce d'identité${sC}`,'co');
   if(OS.livret) a("Livret de famille (y compris page enfant vierge)");
   if(OS.pacse) a("Attestation de PACS (convention de PACS enregistrée)");
   if(OS.divorce) a("Jugement de divorce");
-  a(`Dernière facture EDF de ${en}`,'emp');
+  a(`Dernière facture EDF${sE}`,'emp');
   a("2 derniers avis d'imposition");
-  a(`3 derniers relevés de compte personnel de ${en}`,'emp');
-  if(hasCo) a(`3 derniers relevés de compte personnel de ${cn}`,'co');
+  a(`3 derniers relevés de compte personnel${sE}`,'emp');
+  if(hasCo) a(`3 derniers relevés de compte personnel${sC}`,'co');
   a("Dernier relevé de compte épargne");
 
-  if(GS.empLog==='loc'){a(`Bail de location de ${en}`,'emp');a(`3 dernières quittances de loyer de ${en}`,'emp');}
-  if(GS.empLog==='prop'){a(`Attestation de propriété de ${en}`,'emp');a(`Taxe foncière de ${en}`,'emp');}
-  if(GS.empLog==='heb'){a(`Attestation d'hébergement à titre gratuit de ${en}`,'emp');a(`CNI de l'hébergeur de ${en}`,'emp');a(`Justificatif de domicile de l'hébergeur de ${en}`,'emp');}
+  if(GS.empLog==='loc'){a(`Bail de location${sE}`,'emp');a(`3 dernières quittances de loyer${sE}`,'emp');}
+  if(GS.empLog==='prop'){a(`Attestation de propriété${sE}`,'emp');a(`Taxe foncière${sE}`,'emp');}
+  if(GS.empLog==='heb'){a(`Attestation d'hébergement à titre gratuit${sE}`,'emp');a(`CNI de l'hébergeur${sE}`,'emp');a(`Justificatif de domicile de l'hébergeur${sE}`,'emp');}
 
   if(hasCo&&GS.coLog!=='same'){
-    if(GS.coLog==='loc'){a(`Bail de location de ${cn}`,'co');a(`3 dernières quittances de loyer de ${cn}`,'co');}
-    if(GS.coLog==='prop'){a(`Attestation de propriété de ${cn}`,'co');a(`Taxe foncière de ${cn}`,'co');}
-    if(GS.coLog==='heb'){a(`Attestation d'hébergement à titre gratuit de ${cn}`,'co');a(`CNI de l'hébergeur de ${cn}`,'co');a(`Justificatif de domicile de l'hébergeur de ${cn}`,'co');}
+    if(GS.coLog==='loc'){a(`Bail de location${sC}`,'co');a(`3 dernières quittances de loyer${sC}`,'co');}
+    if(GS.coLog==='prop'){a(`Attestation de propriété${sC}`,'co');a(`Taxe foncière${sC}`,'co');}
+    if(GS.coLog==='heb'){a(`Attestation d'hébergement à titre gratuit${sC}`,'co');a(`CNI de l'hébergeur${sC}`,'co');a(`Justificatif de domicile de l'hébergeur${sC}`,'co');}
   }
 
-  if(GS.empPro==='sal'){a(`3 derniers bulletins de salaire + bulletin de décembre de ${en}`,'emp');a(`Contrat de travail de ${en}`,'emp');}
-  if(GS.empPro==='tns'){a(`3 derniers relevés de compte professionnel de ${en}`,'emp');a(`Extrait Kbis de moins de 3 mois de ${en}`,'emp');a(`3 derniers bilans comptables de ${en}`,'emp');a(`Statut de la société de ${en}`,'emp');}
-  if(GS.empPro==='cho'){a(`Derniers bulletins de salaire du précédent emploi de ${en}`,'emp');a(`Dernier contrat de travail du précédent emploi de ${en}`,'emp');}
+  if(GS.empPro==='sal'){a(`3 derniers bulletins de salaire + bulletin de décembre${sE}`,'emp');a(`Contrat de travail${sE}`,'emp');}
+  if(GS.empPro==='tns'){a(`3 derniers relevés de compte professionnel${sE}`,'emp');a(`Extrait Kbis de moins de 3 mois${sE}`,'emp');a(`3 derniers bilans comptables${sE}`,'emp');a(`Statut de la société${sE}`,'emp');}
+  if(GS.empPro==='cho'){a(`Derniers bulletins de salaire du précédent emploi${sE}`,'emp');a(`Dernier contrat de travail du précédent emploi${sE}`,'emp');}
 
   if(hasCo){
-    if(GS.coPro==='sal'){a(`3 derniers bulletins de salaire + bulletin de décembre de ${cn}`,'co');a(`Contrat de travail de ${cn}`,'co');}
-    if(GS.coPro==='tns'){a(`3 derniers relevés de compte professionnel de ${cn}`,'co');a(`Extrait Kbis de moins de 3 mois de ${cn}`,'co');a(`3 derniers bilans comptables de ${cn}`,'co');a(`Statut de la société de ${cn}`,'co');}
-    if(GS.coPro==='cho'){a(`Derniers bulletins de salaire du précédent emploi de ${cn}`,'co');a(`Dernier contrat de travail du précédent emploi de ${cn}`,'co');}
+    if(GS.coPro==='sal'){a(`3 derniers bulletins de salaire + bulletin de décembre${sC}`,'co');a(`Contrat de travail${sC}`,'co');}
+    if(GS.coPro==='tns'){a(`3 derniers relevés de compte professionnel${sC}`,'co');a(`Extrait Kbis de moins de 3 mois${sC}`,'co');a(`3 derniers bilans comptables${sC}`,'co');a(`Statut de la société${sC}`,'co');}
+    if(GS.coPro==='cho'){a(`Derniers bulletins de salaire du précédent emploi${sC}`,'co');a(`Dernier contrat de travail du précédent emploi${sC}`,'co');}
   }
 
-  if(OS.emp_loa) a(`Contrat de location LOA de ${en}`,'emp');
-  if(OS.emp_credit){a(`Offre de prêt du crédit en cours de ${en}`,'emp');a(`Échéancier du crédit en cours de ${en}`,'emp');}
-  if(OS.emp_patrimoine) a(`Bail de location du patrimoine mis en location de ${en}`,'emp');
+  if(OS.emp_loa) a(`Contrat de location LOA${sE}`,'emp');
+  if(OS.emp_credit){a(`Offre de prêt du crédit en cours${sE}`,'emp');a(`Échéancier du crédit en cours${sE}`,'emp');}
+  if(OS.emp_patrimoine) a(`Bail de location du patrimoine mis en location${sE}`,'emp');
   if(hasCo){
-    if(OS.co_loa) a(`Contrat de location LOA de ${cn}`,'co');
-    if(OS.co_credit){a(`Offre de prêt du crédit en cours de ${cn}`,'co');a(`Échéancier du crédit en cours de ${cn}`,'co');}
-    if(OS.co_patrimoine) a(`Bail de location du patrimoine mis en location de ${cn}`,'co');
+    if(OS.co_loa) a(`Contrat de location LOA${sC}`,'co');
+    if(OS.co_credit){a(`Offre de prêt du crédit en cours${sC}`,'co');a(`Échéancier du crédit en cours${sC}`,'co');}
+    if(OS.co_patrimoine) a(`Bail de location du patrimoine mis en location${sC}`,'co');
   }
 
   if(OS.compte_joint) a("3 derniers relevés de compte joint");
@@ -1501,14 +1510,12 @@ function buildDocs(){
 }
 
 function generate(){
-  _en=document.getElementById('empName').value.trim()||'vous';
-  const coRaw=document.getElementById('coName').value.trim();
-  _cn=GS.hasCo?(coRaw||'le co-emprunteur'):'';
+  setNames();
   const email=document.getElementById('empEmail').value.trim();
   const projL={achat:'Achat immobilier',construction:'Construction',renovation:'Rénovation',locatif:'Investissement locatif'}[GS.projet];
 
   const docs=buildDocs();
-  const names=GS.hasCo&&_cn?`${_en} & ${_cn}`:_en;
+  const names=GS.hasCo?`${_en} & ${_cn}`:(_rawE||'votre client');
   document.getElementById('rName').textContent=names;
   document.getElementById('rCount').textContent=docs.length;
   document.getElementById('rProj').textContent=projL;
@@ -1523,14 +1530,15 @@ function generate(){
 
   function buildMailLines(){
     const lines=[];
-    const strip=(str,name)=>str.endsWith(` de ${name}`)?str.slice(0,-` de ${name}`.length):null;
-    if(!GS.hasCo){docs.forEach(d=>{const s=strip(d.txt,_en);lines.push(s!==null?s:d.txt);});return lines;}
+    const strip=(str,sfx)=>sfx&&str.endsWith(sfx)?str.slice(0,-sfx.length):null;
+    if(!GS.hasCo){docs.forEach(d=>{const s=strip(d.txt,_sE);lines.push(s!==null?s:d.txt);});return lines;}
+    const both=_rawE&&_rawC?` de ${_rawE} et ${_rawC}`:' de chaque emprunteur';
     const used=new Set();
     docs.forEach((item,i)=>{
       if(used.has(i))return;
       if(item.who==='emp'){
-        const concept=strip(item.txt,_en);
-        if(concept!==null){const j=docs.findIndex((l,idx)=>idx>i&&!used.has(idx)&&l.who==='co'&&strip(l.txt,_cn)===concept);if(j!==-1){used.add(i);used.add(j);lines.push(`${concept} de ${_en} et ${_cn}`);return;}}
+        const concept=strip(item.txt,_sE);
+        if(concept!==null){const j=docs.findIndex((l,idx)=>idx>i&&!used.has(idx)&&l.who==='co'&&strip(l.txt,_sC)===concept);if(j!==-1){used.add(i);used.add(j);lines.push(`${concept}${both}`);return;}}
         used.add(i);lines.push(item.txt);
       }else{used.add(i);lines.push(item.txt);}
     });
@@ -1540,7 +1548,7 @@ function generate(){
   const mailLines=buildMailLines();
   const docMail=mailLines.map(l=>`   • ${l}`).join('\n');
   const subject=`Constitution de votre dossier de financement – ${projL}`;
-  const greeting=GS.hasCo&&_cn?`Bonjour ${_en} et ${_cn},`:`Bonjour ${_en},`;
+  const greeting='Bonjour'+([_rawE,_rawC].filter(Boolean).length?' '+[_rawE,_rawC].filter(Boolean).join(' et '):'')+',';
   const body=`${greeting}\n\nSuite à notre échange, je reviens vers vous afin de constituer votre dossier de financement pour votre projet de ${projL.toLowerCase()}.\n\nAfin d'analyser votre situation et de vous présenter les meilleures conditions auprès de nos partenaires bancaires, je vous invite à me transmettre les pièces justificatives suivantes :\n\n${docMail}\n\nJe vous recommande de me faire parvenir ces documents en version numérique (scan ou photo lisible), directement par email.\n\nN'hésitez pas à me contacter si vous avez la moindre question concernant l'un de ces documents, ou si vous ne disposez pas de certaines pièces — nous trouverons ensemble la solution adaptée à votre situation.\n\nDans l'attente de vos éléments, je reste à votre entière disposition.\n\nCordialement,\n\nLoïc Da Rocha – Courtier en prêt immobilier`;
 
   document.getElementById('mTo').textContent=email||'À compléter';
