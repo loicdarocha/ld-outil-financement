@@ -1517,7 +1517,7 @@ footer span{color:inherit;}
         </div>
         <div class="field">
           <label for="ptzZone">Zone</label>
-          <select id="ptzZone" onchange="ptzZoneManual=true;document.getElementById('ptzZoneHint').textContent='Zone choisie à la main.';ptzEval()">
+          <select id="ptzZone" onchange="ptzZoneManual=true;ptzManualHint();ptzEval()">
             <option value="">Choisir une commune</option><option value="Abis">A bis</option><option value="A">A</option><option value="B1">B1</option><option value="B2">B2</option><option value="C">C</option>
           </select>
           <span class="field-hint" id="ptzZoneHint"></span>
@@ -2042,11 +2042,13 @@ function ptzCommuneInput(){
 }
 async function ptzCommunePick(){
   const v=document.getElementById('ptzCommune').value;
-  const c=ptzCommunes.find(x=>v.startsWith(x.nom+' ('))||ptzCommunes.find(x=>x.nom.toLowerCase()===v.trim().toLowerCase());
+  const lbl=x=>`${x.nom} (${(x.codesPostaux||[])[0]||x.code.slice(0,2)})`;
+  const c=ptzCommunes.find(x=>lbl(x)===v.trim())||ptzCommunes.find(x=>(x.codesPostaux||[]).some(cp=>v.includes('('+cp+')'))&&v.startsWith(x.nom))||ptzCommunes.find(x=>x.nom.toLowerCase()===v.trim().toLowerCase());
   if(!c)return;
   ptzCode=c.code;ptzZoneManual=false;
   const hint=document.getElementById('ptzZoneHint');hint.textContent='Recherche de la zone…';
   const r=await ptzZoneFor(c.code);
+  ptzOfficialZone=r.zone||null;
   if(r.zone){document.getElementById('ptzZone').value=r.zone;hint.textContent=`${c.nom} est en zone ${r.zone==='Abis'?'A bis':r.zone} (zonage officiel en vigueur depuis le 26 juin 2026).`;}
   else hint.textContent="Zonage officiel inaccessible : choisis la zone à la main.";
   ptzEval();
@@ -2128,6 +2130,12 @@ function openPtz(){
   document.getElementById('ptz-modal').classList.add('open');
   ptzLoadZonage();ptzEval();
   setTimeout(()=>{const c=document.getElementById('ptzCommune');if(!c.value)c.focus();},60);
+}
+let ptzOfficialZone=null;
+function ptzManualHint(){
+  const v=document.getElementById('ptzZone').value,h=document.getElementById('ptzZoneHint');
+  if(ptzOfficialZone&&v!==ptzOfficialZone)h.innerHTML=`<span style="color:var(--bad);font-weight:500">Attention : zone officielle de cette commune = ${ptzOfficialZone==='Abis'?'A bis':ptzOfficialZone}.</span> Le calcul utilise la zone choisie à la main.`;
+  else h.textContent=ptzOfficialZone?'Zone officielle.':'Zone choisie à la main.';
 }
 function closePtz(){document.getElementById('ptz-modal').classList.remove('open');}
 
