@@ -1947,7 +1947,7 @@ async function authLogin(){
 }
 async function authSignup(){
   const c=authCreds();if(!c)return;authMsg('Création du compte…');
-  const {data,error}=await sb.auth.signUp(c);
+  const {data,error}=await sb.auth.signUp({...c,options:{emailRedirectTo:location.origin+location.pathname}});
   if(error){authMsg(error.message,true);return;}
   if(data.session){sbUser=data.user;closeAuth();await cloudSync();}
   else authMsg("Compte créé. Clique sur le lien de confirmation reçu par mail (la page qui s'ouvre peut afficher une erreur, c'est normal), puis reviens ici et clique sur « Se connecter ».");
