@@ -2183,6 +2183,7 @@ function loadScenario(id){
 function scenRows(){
   return [
     ['Prix du bien',m=>fmtCur(m.prix)],
+    ['Budget travaux',m=>m.tr?fmtCur(m.tr):'—'],
     ['Apport',m=>fmtCur(m.ap)],
     ['Durée',m=>m.dur+' ans'],
     ['Taux (hors assurance)',m=>(m.ti*100).toFixed(2).replace('.',',')+' %'],
